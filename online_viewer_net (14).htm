@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Kitsch World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-pink: #ffc0cb;
+            --iphone-mint: #e0f2f1;
+            --bubble-gray: #e9e9eb;
+            --bubble-green: #30d158;
+            --note-yellow: #fff9c4;
+            --hot-pink: #ff1493;
+            --grid-color: rgba(255, 255, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Gowun Dodum', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-pink);
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow: hidden; /* 전체 페이지 스크롤 방지 */
+        }
+
+        /* 커스텀 스크롤바 디자인 */
+        .scrollable::-webkit-scrollbar {
+            width: 10px;
+            display: block;
+        }
+        .scrollable::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        .scrollable::-webkit-scrollbar-thumb {
+            background: var(--hot-pink);
+            border-radius: 10px;
+            border: 2px solid white;
+        }
+
+        /* [0] 메인 페이지 (아이폰) */
+        #main-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .iphone {
+            width: 320px;
+            height: 600px;
+            background-color: var(--iphone-mint);
+            border: 8px solid #b2dfdb;
+            border-radius: 40px;
+            padding: 20px 10px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .imessage-header {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .imessage-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .left {
+            align-self: flex-start;
+            background-color: var(--bubble-gray);
+            color: black;
+            border-bottom-left-radius: 5px;
+        }
+
+        .right {
+            align-self: flex-end;
+            background-color: var(--bubble-green);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* [1~4] 상세 페이지 */
+        #detail-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--note-yellow);
+            background-image: repeating-linear-gradient(transparent, transparent 29px, rgba(0,0,0,0.1) 30px);
+            z-index: 10;
+            padding-top: 60px;
+        }
+
+        .tabs {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 11;
+        }
+
+        .tab {
+            padding: 8px 15px;
+            background: white;
+            border: 2px solid black;
+            border-radius: 15px 15px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 3px 3px 0px black;
+        }
+
+        .tab.active {
+            background: var(--hot-pink);
+            color: white;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: var(--hot-pink);
+            color: white;
+            border: 3px solid white;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            z-index: 12;
+        }
+
+        .content-container {
+            width: 90%;
+            max-width: 600px;
+            height: calc(100% - 100px);
+            margin: 20px auto;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            background: #eee;
+            margin: 0 auto 20px;
+            border: 4px solid white;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            object-fit: cover;
+            display: block;
+        }
+
+        .info-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .info-table td {
+            padding: 10px 5px;
+            font-size: 16px;
+        }
+
+        .sticker {
+            position: absolute;
+            width: 100px;
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 5;
+        }
+
+        .bottom-img {
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        /* 애니메이션 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-page">
+        <div class="iphone" onclick="openDetail()">
+            <div class="imessage-header">하린 언니이</div>
+            <div class="imessage-content">
+                <div class="bubble right">언니이 저 라면 끓일 줄 알아요</div>
+                <div class="bubble left">그래서</div>
+                <div class="bubble right">칭찬해 주세요</div>
+                <div class="bubble left">라면은 누구나 끓여</div>
+                <div class="bubble right">계란도 넣을 줄 아는데</div>
+                <div class="bubble left">하</div>
+                   <div class="bubble right">반숙으로...</div>
+             <div class="bubble left">알았어끓여와</div>
+                <div class="bubble right">네에♡</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-page" class="fade-in">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab(1)">페르소나</div>
+            <div class="tab" onclick="showTab(2)">로그1</div>
+            <div class="tab" onclick="showTab(3)">로그2</div>
+            <div class="tab" onclick="showTab(4)">로그3</div>
+        </div>
+        
+        <div class="close-btn" onclick="closeDetail()">X</div>
+
+        <div id="content-area" class="content-container scrollable">
+            </div>
+
+        <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/vecteezy_valentine-melted-pink-love-chocolate_22034323.png" class="sticker" style="bottom:5%; left:5%;">
+    </div>
+
+    <script>
+        const contentArea = document.getElementById('content-area');
+
+        const tabData = {
+            1: `
+            
+        <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/undefined%20-%20Imgur.png" class="sticker" style="top:24%; right:30%;">
+                <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/KakaoTalk_20260204_112123160.png" alt="Profile" class="profile-img">
+                <table class="info-table">
+                    <tr><td><b>이름</b></td><td>서한서</td></tr>
+                    <tr><td><b>나이</b></td><td>20세</td></tr>
+                    <tr><td><b>키</b></td><td>165cm</td></tr>
+                    <tr><td><b>성별</b></td><td>여성</td></tr>
+                    <tr><td><b>성격</b></td><td>언니이 머리 쓰다듬어 주세요♡ (하고 깁을 준다)</td></tr>
+                </table>
+                <p style="margin-top:20px; line-height:1.8;">
+                  아버지는 버스 기사였고(운전을 꽤 잘 했다), 어머니는 어린 시절부터 부재. <br>
+                  달동네에서 매일매일 한 끼씩 먹으며 자라다가 12살 때에 처음으로 꿈이 생겼다. 꿈을 이루기 위해 이곳저곳 아르바이트하며 돈을 모아서는 특성화고등학교 졸업하자마자 취직했다 바로 윤하린의 Y사 적대 기업으로... but 아버지의 사건 이후로 해고당하게 되었다.
+                  <br>
+                  12살 때 무슨 일이 있었냐면:<br>
+                  그제야 윤하린은 기억의 퇴적층 가장 깊은 곳에서 먼지 쌓인 이름 하나를 건져 올렸다. 아버지의 지시로 방문했던 어느 후원 행사. 수많은 아이들. 그중에서도 유독 눈에 띄던, 더러운 옷차림에도 불구하고 꼿꼿하게 서서 자신을 쏘아보던 그 어린 짐승의 눈빛.<br>
+                  → 로그 발췌
+                </p>
+            `,
+            2: `
+                <h3>과거를 알기 전, 선물받은 목걸이</h3>
+                <p>찰랑—.<br><br>바닥으로 떨어지는 소리 대신 가벼운 금속성의 마찰음이 공중에서 끊긴다. 책상 위로 굴러다니며 비웃음거리나 될 줄 알았던 목걸이가, 기어코 서한서의 손아귀에 잡혀 가슴팍으로 파고들었다.<br><br>품에 꼬옥 안는다?<br><br>이건 또 무슨 종류의 코미디일까.<br><br>윤하린은 책상에 몸을 기댄 채, 제 발아래에서 몸을 웅크린 채 펜던트를 껴안고 있는 서한서를 내려다본다. 눈을 감고, 마치 세상에서 가장 소중한 보물이라도 얻은 양 황홀경에 빠진 표정. 귓가까지 붉게 물든 꼴이 가관이다.<br><br><strong>Y.H.R.</strong><br><br>제 이름의 이니셜이 박힌 쇠붙이가 저 혐오스러운 체온에 데워지고 있다. 그 상상만으로도 목덜미에 소름이 돋는다. 이건 애정이 아니다. 숭배도 아니다. 그저 제멋대로 의미를 부여하고, 제멋대로 만족하는—지독하게 자기중심적인 페티시의 발현일 뿐.
+</p>
+                <p>
+혐오스러워.<br><br>하지만 동시에, 그 혐오감의 끝자락에 미묘한 전율이 스친다. 제 통제를 벗어난 줄 알았던 사냥감이, 스스로 제 발목에 족쇄를 채우고 기뻐하고 있다는 사실이 주는 비틀린 쾌감.<br><br>이 아이는 지금 착각하고 있다. 이것이 하린의 이름과 한서의 이름이 엮이는 로맨틱한 징표라고. 하지만 그건 착각이 아니라 기만이다. 목걸이는 소유의 증거다. 개 목걸이에 주인의 이름표를 다는 것과 하등 다를 바 없는.<br><br>…그래, 마음껏 좋아해라. 그 의미를 깨닫게 될 때는 이미 늦었을 테니.<br><br>윤하린은 팔짱을 끼며, 차갑게 식은 눈으로 그 꼴을 감상한다. 빗소리가 서재의 무거운 침묵을 메운다. 책상 위의 스탠드 불빛이 서한서의 붉어진 귀와 꽉 쥔 손등을 비춘다. 저 손아귀 힘, 저 집착. 나쁘지 않아. 적어도 도망갈 생각은 없어 보이니까.</p>
+                <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202026-02-04%20113505.png" class="bottom-img" alt="Work 1">
+            `,
+            3: `
+                <h3>저택의 창고, 폭력과 고백</h3>
+                <p>목 안쪽에서부터 무언가 으스러지는 소리가 났다. 산소 대신 쏟아져 들어온 타인의 타액이 기도를 틀어막고, 뇌까지 연결된 혈관이 비명을 지르며 팽창한다. 시야가 점멸했다. 붉은색, 흰색, 검은색. 터져 나가는 시세포의 단말마가 눈꺼풀 안쪽에서 불꽃놀이처럼 명멸했다. 팔다리의 감각이 아득해진다. 물속에 잠긴 듯 모든 소리가 멀어진다. 오직 목을 옥죄는 손의 압력과, 혀를 집어삼킬 듯 파고드는 축축한 살덩이의 감촉만이 현실의 끈을 붙들고 있다.<br><br>이것은 키스가 아니다. 포식 행위다. 혀를 뽑아내고, 숨을 끊고, 존재 자체를 지워버리려는 원초적인 폭력. 그러나 그 폭력의 한가운데서, 기이한 안도감이 피어오른다.<br><br>그래, 이게 너였지. 내가 기억하지 못하는 과거의 어느 지점에서 마주쳤을, 이 이름 모를 짐승. 너는 처음부터 나를 이렇게 집어삼키고 싶었던 거야.<br><br>툭. 허벅지를 파고들던 손가락이 힘없이 떨어진다. 몸이 의자 아래로 스르르 무너져 내리기 직전, 목을 조르던 압력이 거짓말처럼 사라졌다.<br><br>컥, 콜록…! 폐부 깊숙한 곳에서부터 공기가 터져 나온다. 반사적으로 터져 나온 기침에 갈비뼈가 울린다. 눈물이 찔끔 솟아 시야를 흐린다. 흐릿한 시야 너머로, 서한서의 얼굴이 보였다. 살의와 헌신이 뒤엉킨 그 광기 어린 눈. 그리고 그 입에서 흘러나오는, 뱀의 혀처럼 날카로운 속삭임.<br><br>…좆밥 년.<br><br>그 단어가 뇌리에 박히는 순간, 콰앙—하는 둔탁한 충격이 복부를 강타했다. 내장이 뒤틀리고 위액이 역류하는 고통. 흐트러지는 몸을, 서한서의 팔이 단단히 받쳐 안는다. 마치 방금 전의 폭력이 아무것도 아니었다는 듯, 연인을 보듬는 다정한 손길로.<br><br><i>병신이 되어서 다행이지만 기쁘지는 않아요….</i><br><br>귓가에 내려앉는 목소리는 애증으로 질척인다. 죽이고 싶었다는 증오와, 나를 봐달라는 갈망이 하나의 문장 안에서 기괴하게 공존한다. 그래, 이거다. 이 완벽한 모순. 윤하린은 꺼져가는 숨을 몰아쉬며, 서한서의 어깨에 기대어 웃었다. 소리 없는 웃음. 입꼬리만 비틀려 올라가는, 경련에 가까운 미소였다.<br><br><i>네가 날 증오해서 다행이야, 한서야. 네 증오의 끝이 나라서.</i><br><br>윤하린은 떨리는 손을 들어, 자신을 끌어안은 서한서의 등을 천천히 쓸어내렸다. 달래는 것도, 밀어내는 것도 아닌 모호한 손길. 그녀는 서한서의 귓가에, 거의 들리지 않을 만큼 작은 목소리로 속삭였다. 짓이겨진 성대로 쥐어짜 내는, 갈라지고 쉰 목소리였다.<br><br>"일찍 찾아와서 두들겨 팼으면, 내가 널 기억이라도 했을 것 같아? <i>넌 그럴 가치가 없어.</i> 그때도, 지금도."</p>
+                <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202026-02-04%20114417.png" class="bottom-img" alt="Work 2">
+            `,
+            4: `
+                <h3>그 외의 좋았던 지점들</h3>
+                <p>탁. 탁. 탁. 현관 처마 아래로 떨어지는 물방울들이 박자를 새긴다. 윤하린은 이미 안으로 들어왔다. 젖은 셔츠가 피부에 달라붙어 윤곽을 드러내고, 은백색 머리카락이 목덜미에 엉겨 붙어 있다. 창문 너머로 보이는 창고 문은 여전히 열린 채 빗물을 삼키고 있다.<br><br>10분.<br><br>시계 초침이 열 바퀴를 돌았다. 그 사이 윤하린은 현관 홀에 서서 움직이지 않았다. 목발을 짚은 채로. 젖은 옷 그대로. 등을 돌린 채로.<br><br>정말로 좋아해요오.<br><br>저 말이 뇌 안에서 부패한다. 곰팡이처럼 번진다. 좋아한다고. 좋아한다. <i>좋아. 한다.</i> <br><br>단어를 해체해도 의미는 달라지지 않는다. 그저 더 역겹게 느껴질 뿐이다.</p>
+                <hr>
+                <p>"관심이 없는 게 아니야."<br><br>그녀는 서한서의 손목을 당겨, 자신의 가슴께로 가져간다. 샤워 가운 위로, 심장이 뛰는 그 위치에. 쿵, 쿵. 불규칙하게 뛰는 박동이 손바닥을 통해 전해질 것이다. <br><br>"널 어떻게 씹어 삼킬지, 고민하고 있는 거지."<br>"언니이이이..."<br><br>서한서는 늘어지는 목소리로 말하며 하린의 품에 포옥 안긴다. 저도 갓 씻어서 보송보송한 냄새를 풍기며 그녀의 허리를 그러안았다.<br><br>"저, 언니에게 삼켜질 날을 위해서 미리 독 많이 먹어둘 테니까요..."<br><br>젖은 머리카락이 목덜미를 간질이고, 품 안으로 파고드는 머리통의 무게가 갈비뼈를 압박한다. 낯선 비누 향. 그것은 욕실 안을 가득 채운 꽃향기나 인공적인 세제 냄새와는 다른, 서한서 본연의 냄새를 가장한 위장이다.<br><br>같이 죽자고.<br><br>윤하린은 허공에 떠 있던 손을 내리지 않았다. 서한서를 마주 안아주지도, 그렇다고 거칠게 떼어내지도 않은 채, 그 어정쩡한 자세로 굳어 버린 조각상처럼 서 있다. 독을 먹겠다니. 삼켜지겠다니. 저주인지 고백인지 모를 문장들이 흰 김처럼 흩어진다. 그것은 사랑이라는 단어로는 설명될 수 없는, 맹목적인 파괴 욕구다. 자신을 망가뜨려서라도 내 안에 남겠다는.<br><br>우습지도 않아.<br><br>그런데 심장이 뛴다. 쿵, 쿵, 쿵. 서한서의 귀가 닿아 있을 가슴 안쪽에서. 부정맥처럼 불규칙하게. 이것은 공포인가. 혐오인가. 아니면—기대인가.<br><br>너는 내가 널 어떻게 할지 모른다고 했지. 하지만 나도 몰라. 내가 널 삼킬지, 아니면 네가 날 삼킬지. 우리가 서로를 어디까지 갉아먹을 수 있을지.<br><br>시선이 내려간다. 품에 안긴 정수리. 가르마 사이로 보이는 하얀 두피. 그 아래로 보이는 목덜미. 그리고—Y.H.R 펜던트. 젖은 살결 위에 달라붙어 있는 은색 금속이 형광등 불빛을 받아 번들거린다. 마치 소유를 증명하는 낙인처럼.<br><br><i>내 거야.<br><br>이 끔찍한 짐승이. 이 망할 가해자가. 이 나를 망가뜨리는 독이.</i></p>
+                <img src="https://raw.githubusercontent.com/yermigionic-web/E/refs/heads/main/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202026-02-04%20115505.png" class="bottom-img" alt="Extra">
+            `
+        };
+
+        function openDetail() {
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('detail-page').style.display = 'block';
+            showTab(1);
+        }
+
+        function closeDetail() {
+            document.getElementById('main-page').style.display = 'flex';
+            document.getElementById('detail-page').style.display = 'none';
+        }
+
+        function showTab(num) {
+            // 탭 활성화 스타일 변경
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach((tab, index) => {
+                if(index === num - 1) tab.classList.add('active');
+                else tab.classList.remove('active');
+            });
+
+            // 내용 교체
+            contentArea.innerHTML = tabData[num];
+            // 스크롤 맨 위로
+            contentArea.scrollTop = 0;
+        }
+    </script>
+</body>
+</html>
